@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/23 02:00:43 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/23 02:39:55 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ t_list		*new_list_item(void)
 
 void	list_swap(t_list *a, t_list *b)
 {
-	(void)a;
-	(void)b;
 	t_list	tmp;
 	
 	tmp.content = ft_strdup(a->content);
@@ -103,10 +101,13 @@ void	sort_list(t_env *env, int (*cmp)(t_list *, t_list *))
 		iter = env->head;
 		while (iter->next->next)
 		{
-			if ((*cmp)(iter, iter->next))
+			if (ft_strequ(iter->directory, iter->next->directory))
 			{
-				unsorted = 1;
-				list_swap(iter, iter->next);
+				if ((*cmp)(iter, iter->next))
+				{
+					unsorted = 1;
+					list_swap(iter, iter->next);
+				}
 			}
 			iter = iter->next;
 		}
@@ -115,10 +116,28 @@ void	sort_list(t_env *env, int (*cmp)(t_list *, t_list *))
 
 int		sort_by_alpha(t_list *a, t_list *b)
 {
+	return ((ft_strcmp(a->content, b->content)) > 0);
+}
+
+int		sort_by_revalpha(t_list *a, t_list *b)
+{
+	return (!((ft_strcmp(a->content, b->content)) > 0));
+}
+
+int		sort_by_time(t_list *a, t_list *b)
+{
+	struct stat		abuf;
+	struct stat		bbuf;
+
+	stat(join_paths(a->directory, a->content), &abuf);
+	stat(join_paths(b->directory, b->content), &bbuf);
+	return (abuf.st_mtime < bbuf.st_mtime);
+}
+
+int		sort_by_reverse(t_list *a, t_list *b)
+{
 	(void)a;
 	(void)b;
-	if ((ft_strcmp(a->content, b->content)) > 0)
-		return (1);
 	return (0);
 }
 
@@ -131,6 +150,8 @@ void	print_list(t_env *env)
 	{
 		if (iter->content[0] != '.' || env->a_flag)
 			ft_printf("%-10s", iter->content);
+		if (!(ft_strequ(iter->directory, iter->next->directory)))
+			ft_printf("\n");
 		iter = iter->next;
 	}
 	ft_printf("\n");
@@ -220,12 +241,16 @@ void	handle_args(t_env *env, int argc, char **args)
 	if (env->R_flag)
 	{
 		recurse_folders(env);
+		sort_list(env, &sort_by_alpha);
 		print_recursed_directory(env);
 	}
 	else
 	{
+		sort_list(env, &sort_by_alpha);
 		if (env->t_flag)
-			sort_list(env, &sort_by_alpha);
+			sort_list(env, &sort_by_time);//needs work.
+		if (env->r_flag)
+			sort_list(env, &sort_by_revalpha);
 		print_list(env);
 	}
 }
