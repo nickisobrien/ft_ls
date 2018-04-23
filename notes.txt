@@ -1,0 +1,3 @@
+ls -l
+total...?
+File permissions, number of links, user author, ....(2017_august)?, ...(4096)?, Last modified date and time(i think), file name

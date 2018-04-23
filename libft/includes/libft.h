@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/22 15:52:02 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/19 22:54:29 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/22 20:49:52 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 
 typedef struct		s_list
 {
-	void			*content;
+	char			*directory;
+	char			*content;
 	size_t			content_size;
 	struct s_list	*next;
 }					t_list;
