@@ -2,3 +2,10 @@ ls -l
 file mode, number of links, owner name, group name, number of bytes in the file,
      abbreviated month, day-of-month file was last modified, hour file last modified, minute file last modified, and the pathname.  In addition, for each directory whose
      contents are displayed, the total number of 512-byte blocks used by the files in the directory is displayed on a line by itself, immediately before the information
+
+
+-l dates need fixing and symbolic links
+-t needs some fixing with ==
+-R needs some cleaning/fixing, misses some directories
+
+

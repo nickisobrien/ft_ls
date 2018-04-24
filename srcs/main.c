@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/23 18:27:36 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/24 00:42:24 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ static char		*int_to_month[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul
 void	error(char *err)
 {
 	ft_printf("Error: %s\n", err);
+	exit(-1);
+}
+
+void	usage(void)
+{
+	ft_printf("usage: ls [-alrRt] [file ...]");
 	exit(-1);
 }
 
@@ -255,22 +261,34 @@ void	recurse_folders(t_env *env)
 
 void	handle_flags(t_env *env, int argc, char **argv)
 {
-	char *str;
+	int i;
 
 	if (argc == 1)
 		return ;
-	while (1 + env->flag_count < argc && ((str = ft_strchr(argv[1 + env->flag_count], '-')) != NULL))//can be while loop?
+	while (1 + env->flag_count < argc)//can be while loop?
 	{
-		if (*(str + 1) == 'l')
-			env->l_flag = 1;
-		if (*(str + 1) == 'r')
-			env->r_flag = 1;
-		if (*(str + 1) == 't')
-			env->t_flag = 1;
-		if (*(str + 1) == 'a')
-			env->a_flag = 1;
-		if (*(str + 1) == 'R')
-			env->R_flag = 1;
+		i = 0;
+		if (argv[1 + env->flag_count][i++] == '-')
+		{
+			while (argv[1 + env->flag_count][i])
+			{
+				if (argv[1 + env->flag_count][i] == 'l')
+					env->l_flag = 1;
+				else if (argv[1 + env->flag_count][i] == 'r')
+					env->r_flag = 1;
+				else if (argv[1 + env->flag_count][i] == 't')
+					env->t_flag = 1;
+				else if (argv[1 + env->flag_count][i] == 'a')
+					env->a_flag = 1;
+				else if (argv[1 + env->flag_count][i] == 'R')
+					env->R_flag = 1;
+				else
+					usage();
+				i++;
+			}
+		}
+		else
+			break ;
 		env->flag_count++;
 	}
 }
