@@ -1,3 +1,4 @@
 ls -l
-total...?
-File permissions, number of links, user author, ....(2017_august)?, ...(4096)?, Last modified date and time(i think), file name
+file mode, number of links, owner name, group name, number of bytes in the file,
+     abbreviated month, day-of-month file was last modified, hour file last modified, minute file last modified, and the pathname.  In addition, for each directory whose
+     contents are displayed, the total number of 512-byte blocks used by the files in the directory is displayed on a line by itself, immediately before the information

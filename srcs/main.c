@@ -6,13 +6,15 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/23 02:39:55 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/23 18:27:36 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
 void	recurse_folders(t_env *env);
+
+static char		*int_to_month[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 void	error(char *err)
 {
@@ -27,7 +29,6 @@ DIR		*open_dir(char *directory)
 	dir = opendir(directory);
 	if (dir == NULL)
 		return (NULL);
-		// error("Unable to open directory.");
 	return (dir);
 }
 
@@ -53,9 +54,35 @@ char	*join_paths(char *path_a, char *path_b)
 	return (ft_strjoin(ft_strjoin(path_a, "/"), path_b));//leak?
 }
 
-void	print_l_info(void)
+void	print_permissions(struct stat abuf)
 {
-	ft_printf("info%-20c", ' ');
+	ft_printf( (S_ISDIR(abuf.st_mode)) ? "d" : "-");
+    ft_printf( (abuf.st_mode & S_IRUSR) ? "r" : "-");
+    ft_printf( (abuf.st_mode & S_IWUSR) ? "w" : "-");
+    ft_printf( (abuf.st_mode & S_IXUSR) ? "x" : "-");
+    ft_printf( (abuf.st_mode & S_IRGRP) ? "r" : "-");
+    ft_printf( (abuf.st_mode & S_IWGRP) ? "w" : "-");
+    ft_printf( (abuf.st_mode & S_IXGRP) ? "x" : "-");
+    ft_printf( (abuf.st_mode & S_IROTH) ? "r" : "-");
+    ft_printf( (abuf.st_mode & S_IWOTH) ? "w" : "-");
+    ft_printf( (abuf.st_mode & S_IXOTH) ? "x" : "-");
+}
+
+void	print_l_info(t_list *item)
+{
+	struct stat		abuf;
+	struct tm		*time;
+
+	stat(join_paths(item->directory, item->content), &abuf);
+	struct passwd *pw = getpwuid(abuf.st_uid);
+	struct group  *gr = getgrgid(abuf.st_gid);
+	print_permissions(abuf);
+	ft_printf(" %2c ", 0);
+	ft_printf(" %s ", pw->pw_name);
+	ft_printf(" %s ", gr->gr_name);
+	ft_printf("%5d", abuf.st_size);
+	time = gmtime(&(abuf.st_mtime));
+	ft_printf(" %s %2d %02d:%02d ", int_to_month[time->tm_mon], time->tm_mday, time->tm_hour, time->tm_min);//time isn't correct
 }
 
 void	print_directory_name(char *str)
@@ -78,8 +105,8 @@ void	list_swap(t_list *a, t_list *b)
 {
 	t_list	tmp;
 	
-	tmp.content = ft_strdup(a->content);
-	tmp.directory = ft_strdup(a->directory);
+	tmp.content = a->content;
+	tmp.directory = a->directory;
 	tmp.content_size = a->content_size;
 	a->content = b->content;
 	a->directory = b->directory;
@@ -99,7 +126,7 @@ void	sort_list(t_env *env, int (*cmp)(t_list *, t_list *))
 	{
 		unsorted = 0;
 		iter = env->head;
-		while (iter->next->next)
+		while (iter->next && iter->next->next)
 		{
 			if (ft_strequ(iter->directory, iter->next->directory))
 			{
@@ -134,11 +161,28 @@ int		sort_by_time(t_list *a, t_list *b)
 	return (abuf.st_mtime < bbuf.st_mtime);
 }
 
-int		sort_by_reverse(t_list *a, t_list *b)
+int		sort_by_reverse(t_list *a, t_list *b)//todo
 {
 	(void)a;
 	(void)b;
 	return (0);
+}
+
+void	print_recursed_directory(t_env *env)
+{
+	t_list *iter;
+
+	iter = env->head;
+	while (iter->next)
+	{
+		if (iter->content[0] != '.')
+			ft_printf("%-16s  ", iter->content);
+		if (env->l_flag)
+			ft_printf("\n");
+		if (iter->next->directory && !ft_strequ(iter->directory, iter->next->directory))
+			ft_printf("\n\n%s:\n", iter->next->directory);
+		iter = iter->next;
+	}
 }
 
 void	print_list(t_env *env)
@@ -149,12 +193,23 @@ void	print_list(t_env *env)
 	while (iter->next)
 	{
 		if (iter->content[0] != '.' || env->a_flag)
-			ft_printf("%-10s", iter->content);
-		if (!(ft_strequ(iter->directory, iter->next->directory)))
+		{
+			if (env->l_flag)
+				print_l_info(iter);
+			ft_printf("%-10s ", iter->content);
+		}
+		if (env->l_flag)
 			ft_printf("\n");
+		if (iter->next->next)
+			if (!(ft_strequ(iter->directory, iter->next->directory)))
+			{
+				(env->l_flag) ? ft_printf("\n") : ft_printf("\n\n");
+				ft_printf("%s:\n", iter->next->directory);
+			}
 		iter = iter->next;
 	}
-	ft_printf("\n");
+	if (!env->l_flag)
+		ft_printf("\n");
 }
 
 void	add_directory_to_list(t_env *env, char *directory)
@@ -170,6 +225,8 @@ void	add_directory_to_list(t_env *env, char *directory)
 		iter = iter->next;
 	while ((sd = readdir(dir)) != NULL)
 	{
+		if (sd->d_name[0] == '.' && !(env->a_flag))
+			continue ;
 		iter->directory = ft_strdup(directory);
 		iter->content = ft_strdup(sd->d_name);
 		iter->content_size = ft_strlen(sd->d_name);
@@ -188,25 +245,10 @@ void	recurse_folders(t_env *env)
 	while (iter->next)
 	{
 		stat(iter->content, &buf);
-		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, ".") && !ft_strequ(iter->content, "libft.a") && iter->content[0] != '.')
+		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
 		{
 			add_directory_to_list(env, join_paths(iter->directory, iter->content));
 		}
-		iter = iter->next;
-	}
-}
-
-void	print_recursed_directory(t_env *env)
-{
-	t_list *iter;
-
-	iter = env->head;
-	while (iter->next)
-	{
-		if (iter->content[0] != '.')
-		ft_printf("%-16s  ", iter->content);
-		if (iter->next->directory && !ft_strequ(iter->directory, iter->next->directory))
-			ft_printf("\n\n%s:\n", iter->next->directory);
 		iter = iter->next;
 	}
 }
@@ -217,13 +259,18 @@ void	handle_flags(t_env *env, int argc, char **argv)
 
 	if (argc == 1)
 		return ;
-	if ((str = ft_strchr(argv[1 + env->flag_count], '-')) != NULL)//can be while loop?
+	while (1 + env->flag_count < argc && ((str = ft_strchr(argv[1 + env->flag_count], '-')) != NULL))//can be while loop?
 	{
-		env->l_flag = (*(str + 1) == 'l' ? 1 : 0);
-		env->R_flag = (*(str + 1) == 'R' ? 1 : 0);
-		env->a_flag = (*(str + 1) == 'a' ? 1 : 0);
-		env->t_flag = (*(str + 1) == 't' ? 1 : 0);
-		env->r_flag = (*(str + 1) == 'r' ? 1 : 0);
+		if (*(str + 1) == 'l')
+			env->l_flag = 1;
+		if (*(str + 1) == 'r')
+			env->r_flag = 1;
+		if (*(str + 1) == 't')
+			env->t_flag = 1;
+		if (*(str + 1) == 'a')
+			env->a_flag = 1;
+		if (*(str + 1) == 'R')
+			env->R_flag = 1;
 		env->flag_count++;
 	}
 }
@@ -242,7 +289,7 @@ void	handle_args(t_env *env, int argc, char **args)
 	{
 		recurse_folders(env);
 		sort_list(env, &sort_by_alpha);
-		print_recursed_directory(env);
+		print_list(env);
 	}
 	else
 	{

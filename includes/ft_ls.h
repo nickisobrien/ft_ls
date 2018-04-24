@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/22 20:22:21 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/23 17:41:23 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <pwd.h>
+#include <grp.h>
+#include <uuid/uuid.h>
 
 typedef struct 	s_env
 {
