@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 17:01:32 by nobrien           #+#    #+#             */
-/*   Updated: 2018/03/29 19:04:45 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/25 16:40:55 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 		lst->content_size = 0;
 	}
 	lst->next = NULL;
+	lst->down = NULL;
 	return (lst);
 }

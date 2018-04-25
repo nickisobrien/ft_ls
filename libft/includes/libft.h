@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/22 15:52:02 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/22 20:49:52 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/25 16:42:46 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct		s_list
 	char			*content;
 	size_t			content_size;
 	struct s_list	*next;
+	struct s_list	*down;
 }					t_list;
 
 void				*ft_memset(void *str, int c, size_t n);

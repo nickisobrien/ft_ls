@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/23 17:41:23 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/24 01:54:49 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct 	s_env
 	int		t_flag;
 	int		r_flag;
 	int		flag_count;
+	int		arg_count;
 	t_list	*head;
 }				t_env;
 
