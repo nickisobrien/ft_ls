@@ -6,13 +6,13 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/25 17:20:48 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/25 21:28:51 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-void	recurse_folders(t_env *env);
+void	recurse_folders(t_env *env, t_list *head);
 
 void	error(char *err)
 {
@@ -94,7 +94,6 @@ void	print_l_info(t_list *item)
 	ft_printf(" %5d", abuf.st_size);
 	t = ctime(&(abuf.st_mtime)) + 4;
 	ft_printf(" %.12s ", t);
-	// ft_printf(" %s %2d %02d:%02d ", int_to_month[time->tm_mon], time->tm_mday, time->tm_hour, time->tm_min);//time isn't correct
 }
 
 t_list		*new_list_item(void)
@@ -116,15 +115,18 @@ void	list_swap(t_list *a, t_list *b)//change where next is pointing instead of s
 	tmp.content = a->content;
 	tmp.directory = a->directory;
 	tmp.content_size = a->content_size;
+	tmp.down = a->down;
 	a->content = b->content;
 	a->directory = b->directory;
 	a->content_size = b->content_size;
+	a->down = b->down;
 	b->content = tmp.content;
 	b->directory = tmp.directory;
 	b->content_size = tmp.content_size;
+	b->down = tmp.down;
 }
 
-void	sort_list(t_env *env, int (*cmp)(t_list *, t_list *))
+void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 {
 	t_list		*iter;
 	int			unsorted;
@@ -133,19 +135,24 @@ void	sort_list(t_env *env, int (*cmp)(t_list *, t_list *))
 	while (unsorted)
 	{
 		unsorted = 0;
-		iter = env->head;
+		iter = base;
 		while (iter->next && iter->next->next)
 		{
-			if (ft_strequ(iter->directory, iter->next->directory))
+			if ((*cmp)(iter, iter->next))
 			{
-				if ((*cmp)(iter, iter->next))
-				{
-					unsorted = 1;
-					list_swap(iter, iter->next);
-				}
+				unsorted = 1;
+				list_swap(iter, iter->next);
 			}
 			iter = iter->next;
 		}
+	}
+
+	iter = base;
+	while (iter->next)
+	{
+		if (iter->down)
+			sort_list(env, iter->down, cmp);
+		iter = iter->next;
 	}
 }
 
@@ -171,71 +178,48 @@ int		sort_by_time(t_list *a, t_list *b)
 			abuf.st_mtimespec.tv_nsec < bbuf.st_mtimespec.tv_nsec));
 }
 
-int		sort_by_reverse(t_list *a, t_list *b)//todo
-{
-	(void)a;
-	(void)b;
-	return (0);
-}
-
-void	print_list(t_env *env)
+void	print_list(t_env *env, t_list *base)
 {
 	t_list *iter;
-	t_list *diter;
 
-	diter = env->head;
-	while (diter)
+	iter = base;
+	while (iter->next)
 	{
-		iter = diter;
-		while (iter->next)
-		{
-			if (iter->content[0] != '.' || env->a_flag)
-			{
-				if (env->l_flag)
-					print_l_info(iter);
-				ft_printf("%-10s ", iter->content);
-			}
-			if (env->l_flag)
-				ft_printf("\n");
-			if (iter->next->next)
-				if (!(ft_strequ(iter->directory, iter->next->directory)))
-				{
-					(env->l_flag) ? ft_printf("\n") : ft_printf("\n\n");
-					ft_printf("%s:\n", iter->next->directory);
-				}
-			iter = iter->next;
-		}
-		if (diter->down)
-		{
-			diter = diter->down;
-			ft_printf("\n\n%s:\n", diter->directory);
-		}
-		else
-			break ;
+		if (env->l_flag)
+			print_l_info(iter);
+		ft_printf("%-10s ", iter->content);
+		if (env->l_flag)
+			ft_printf("\n");
+		iter = iter->next;
 	}
-	if (!env->l_flag)
-		ft_printf("\n");
+	ft_printf("\n");
+	iter = base;
+	while (iter->next)
+	{
+		if (iter->down)
+		{
+			(env->l_flag) ? ft_printf("%s/%s:\n", iter->directory, iter->content) : ft_printf("\n%s/%s:\n", iter->directory, iter->content);
+			print_list(env, iter->down);
+		}
+		iter = iter->next;
+	}
 }
 
-void	add_directory_to_list(t_env *env, char *directory)
+void	add_directory_to_list(t_env *env, char *directory, t_list *base)
 {
 	struct dirent	*sd;
 	DIR				*dir;
 	t_list			*iter;
-	t_list			*diter;
 
 	if (!(dir = open_dir(directory)))
 		return ;
-	diter = env->head;
-	if (diter->content)
+	if (base->content)
 	{
-		while (diter->down)
-			diter = diter->down;
-		diter->down = new_list_item();
-		iter = diter->down;
+		base->down = new_list_item();
+		iter = base->down;
 	}
 	else
-		iter = diter;
+		iter = base;
 	while ((sd = readdir(dir)) != NULL)
 	{
 		if (sd->d_name[0] == '.' && !(env->a_flag))
@@ -249,29 +233,21 @@ void	add_directory_to_list(t_env *env, char *directory)
 	close_dir(dir);
 }
 
-void	recurse_folders(t_env *env)
+void	recurse_folders(t_env *env, t_list *head)
 {
 	t_list *iter;
-	t_list *diter;
 	struct stat buf;
 
-	diter = env->head;
-	while(diter)
+	iter = head;
+	while (iter->next)
 	{
-		iter = diter;
-		while (iter->next)
+		stat(join_paths(iter->directory, iter->content), &buf);
+		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
 		{
-			stat(join_paths(iter->directory, iter->content), &buf);
-			if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
-			{
-				add_directory_to_list(env, join_paths(iter->directory, iter->content));
-			}
-			iter = iter->next;
+			add_directory_to_list(env, join_paths(iter->directory, iter->content), iter);
+			recurse_folders(env, iter->down);
 		}
-		if (diter->down)
-			diter = diter->down;
-		else
-			break ;
+		iter = iter->next;
 	}
 }
 
@@ -281,7 +257,7 @@ void	handle_flags(t_env *env, int argc, char **argv)
 
 	if (argc == 1)
 		return ;
-	while (1 + env->flag_count < argc)//can be while loop?
+	while (1 + env->flag_count < argc)
 	{
 		i = 0;
 		if (argv[1 + env->flag_count][i++] == '-')
@@ -316,24 +292,24 @@ void	handle_args(t_env *env, int argc, char **args)
 	i = -1;
 	env->arg_count = argc - 1 - env->flag_count;
 	if (!env->arg_count)
-		add_directory_to_list(env, ".");
+		add_directory_to_list(env, ".", env->head);
 	else if (env->arg_count >= 1)
 		while (++i < env->arg_count)
-			add_directory_to_list(env, args[i + 1 + env->flag_count]);
+			add_directory_to_list(env, args[i + 1 + env->flag_count], env->head);
 	if (env->R_flag)
 	{
-		recurse_folders(env);
-		// sort_list(env, &sort_by_alpha);
-		print_list(env);
+		recurse_folders(env, env->head);
+		sort_list(env, env->head, &sort_by_alpha);
+		print_list(env, env->head);
 	}
 	else
 	{
-		sort_list(env, &sort_by_alpha);
+		sort_list(env, env->head, &sort_by_alpha);
 		if (env->t_flag)
-			sort_list(env, &sort_by_time);
+			sort_list(env, env->head, &sort_by_time);
 		if (env->r_flag)
-			sort_list(env, &sort_by_revalpha);//needs to switch to sort_by_reverse
-		print_list(env);
+			sort_list(env, env->head, &sort_by_revalpha);//needs to switch to sort_by_reverse
+		print_list(env, env->head);
 	}
 }
 
@@ -344,6 +320,5 @@ int		main(int argc, char **argv)
 	init_env(&env);
 	handle_flags(&env, argc, argv);
 	handle_args(&env, argc, argv);
-
 	return (0);
 }
