@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/25 16:42:55 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/25 17:20:48 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*join_paths(char *path_a, char *path_b)
 
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, "/");
-	// ft_strdel(&tmp); leaks?0.
+	// ft_strdel(&tmp); leaks?
 
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, path_b);
@@ -181,31 +181,37 @@ int		sort_by_reverse(t_list *a, t_list *b)//todo
 void	print_list(t_env *env)
 {
 	t_list *iter;
+	t_list *diter;
 
-	iter = env->head;
-	if (iter->next == NULL)
+	diter = env->head;
+	while (diter)
 	{
-		if (env->l_flag)
-			print_l_info(iter);
-		ft_printf("%-10s ", iter->content);
-	}
-	while (iter->next)
-	{
-		if (iter->content[0] != '.' || env->a_flag)
+		iter = diter;
+		while (iter->next)
 		{
-			if (env->l_flag)
-				print_l_info(iter);
-			ft_printf("%-10s dir:%s", iter->content, iter->directory);
-		}
-		if (env->l_flag)
-			ft_printf("\n");
-		if (iter->next->next)
-			if (!(ft_strequ(iter->directory, iter->next->directory)))
+			if (iter->content[0] != '.' || env->a_flag)
 			{
-				(env->l_flag) ? ft_printf("\n") : ft_printf("\n\n");
-				ft_printf("%s:\n", iter->next->directory);
+				if (env->l_flag)
+					print_l_info(iter);
+				ft_printf("%-10s ", iter->content);
 			}
-		iter = iter->next;
+			if (env->l_flag)
+				ft_printf("\n");
+			if (iter->next->next)
+				if (!(ft_strequ(iter->directory, iter->next->directory)))
+				{
+					(env->l_flag) ? ft_printf("\n") : ft_printf("\n\n");
+					ft_printf("%s:\n", iter->next->directory);
+				}
+			iter = iter->next;
+		}
+		if (diter->down)
+		{
+			diter = diter->down;
+			ft_printf("\n\n%s:\n", diter->directory);
+		}
+		else
+			break ;
 	}
 	if (!env->l_flag)
 		ft_printf("\n");
@@ -216,12 +222,20 @@ void	add_directory_to_list(t_env *env, char *directory)
 	struct dirent	*sd;
 	DIR				*dir;
 	t_list			*iter;
+	t_list			*diter;
 
-	iter = env->head;
 	if (!(dir = open_dir(directory)))
 		return ;
-	while (iter->next)
-		iter = iter->next;
+	diter = env->head;
+	if (diter->content)
+	{
+		while (diter->down)
+			diter = diter->down;
+		diter->down = new_list_item();
+		iter = diter->down;
+	}
+	else
+		iter = diter;
 	while ((sd = readdir(dir)) != NULL)
 	{
 		if (sd->d_name[0] == '.' && !(env->a_flag))
@@ -238,17 +252,26 @@ void	add_directory_to_list(t_env *env, char *directory)
 void	recurse_folders(t_env *env)
 {
 	t_list *iter;
+	t_list *diter;
 	struct stat buf;
 
-	iter = env->head;
-	while (iter->next)
+	diter = env->head;
+	while(diter)
 	{
-		stat(join_paths(iter->directory, iter->content), &buf);
-		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
+		iter = diter;
+		while (iter->next)
 		{
-			add_directory_to_list(env, join_paths(iter->directory, iter->content));
+			stat(join_paths(iter->directory, iter->content), &buf);
+			if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
+			{
+				add_directory_to_list(env, join_paths(iter->directory, iter->content));
+			}
+			iter = iter->next;
 		}
-		iter = iter->next;
+		if (diter->down)
+			diter = diter->down;
+		else
+			break ;
 	}
 }
 
@@ -300,7 +323,7 @@ void	handle_args(t_env *env, int argc, char **args)
 	if (env->R_flag)
 	{
 		recurse_folders(env);
-		sort_list(env, &sort_by_alpha);
+		// sort_list(env, &sort_by_alpha);
 		print_list(env);
 	}
 	else
