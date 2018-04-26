@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/25 21:28:51 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/25 21:49:50 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,12 +299,18 @@ void	handle_args(t_env *env, int argc, char **args)
 	if (env->R_flag)
 	{
 		recurse_folders(env, env->head);
-		sort_list(env, env->head, &sort_by_alpha);
+		if (!env->t_flag && !env->r_flag)
+			sort_list(env, env->head, &sort_by_alpha);
+		if (env->t_flag)
+			sort_list(env, env->head, &sort_by_time);
+		if (env->r_flag)
+			sort_list(env, env->head, &sort_by_revalpha);
 		print_list(env, env->head);
 	}
 	else
 	{
-		sort_list(env, env->head, &sort_by_alpha);
+		if (!env->t_flag && !env->r_flag)
+			sort_list(env, env->head, &sort_by_alpha);
 		if (env->t_flag)
 			sort_list(env, env->head, &sort_by_time);
 		if (env->r_flag)
