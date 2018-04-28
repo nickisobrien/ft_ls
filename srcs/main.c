@@ -138,7 +138,7 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 		iter = base;
 		while (iter->next && iter->next->next)
 		{
-			if ((*cmp)(iter, iter->next))
+			if ((*cmp)(iter, iter->next) == 1)
 			{
 				unsorted = 1;
 				list_swap(iter, iter->next);
@@ -146,7 +146,6 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 			iter = iter->next;
 		}
 	}
-
 	iter = base;
 	while (iter->next)
 	{
@@ -173,6 +172,9 @@ int		sort_by_time(t_list *a, t_list *b)
 
 	stat(join_paths(a->directory, a->content), &abuf);
 	stat(join_paths(b->directory, b->content), &bbuf);
+	// if ((abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
+	// 		abuf.st_mtimespec.tv_nsec == bbuf.st_mtimespec.tv_nsec))
+	// 	return (2); // need to figure out this case
 	return (abuf.st_mtimespec.tv_sec < bbuf.st_mtimespec.tv_sec ||
 		(abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
 			abuf.st_mtimespec.tv_nsec < bbuf.st_mtimespec.tv_nsec));
@@ -183,22 +185,26 @@ void	print_list(t_env *env, t_list *base)
 	t_list *iter;
 
 	iter = base;
+	if (env->arg_count > 1 || (env->R_flag && env->head != base))
+			ft_printf("%s:\n", iter->directory);
 	while (iter->next)
 	{
 		if (env->l_flag)
 			print_l_info(iter);
 		ft_printf("%-10s ", iter->content);
-		if (env->l_flag)
+		if (env->l_flag && iter->next)
 			ft_printf("\n");
 		iter = iter->next;
 	}
-	ft_printf("\n");
+	if (env->R_flag || env->arg_count > 1)
+		ft_printf("\n");
 	iter = base;
 	while (iter->next)
 	{
 		if (iter->down)
 		{
-			(env->l_flag) ? ft_printf("%s/%s:\n", iter->directory, iter->content) : ft_printf("\n%s/%s:\n", iter->directory, iter->content);
+			if (!env->l_flag)
+				ft_printf("\n");
 			print_list(env, iter->down);
 		}
 		iter = iter->next;
@@ -297,26 +303,14 @@ void	handle_args(t_env *env, int argc, char **args)
 		while (++i < env->arg_count)
 			add_directory_to_list(env, args[i + 1 + env->flag_count], env->head);
 	if (env->R_flag)
-	{
 		recurse_folders(env, env->head);
-		if (!env->t_flag && !env->r_flag)
-			sort_list(env, env->head, &sort_by_alpha);
-		if (env->t_flag)
-			sort_list(env, env->head, &sort_by_time);
-		if (env->r_flag)
-			sort_list(env, env->head, &sort_by_revalpha);
-		print_list(env, env->head);
-	}
-	else
-	{
-		if (!env->t_flag && !env->r_flag)
-			sort_list(env, env->head, &sort_by_alpha);
-		if (env->t_flag)
-			sort_list(env, env->head, &sort_by_time);
-		if (env->r_flag)
-			sort_list(env, env->head, &sort_by_revalpha);//needs to switch to sort_by_reverse
-		print_list(env, env->head);
-	}
+	if (!env->t_flag)
+		sort_list(env, env->head, &sort_by_alpha);
+	if (env->t_flag)
+		sort_list(env, env->head, &sort_by_time);
+	if (env->r_flag)
+		sort_list(env, env->head, &sort_by_revalpha);//need to switch to reverse
+	print_list(env, env->head);
 }
 
 int		main(int argc, char **argv)

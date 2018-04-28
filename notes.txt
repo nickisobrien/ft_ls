@@ -7,5 +7,6 @@ file mode, number of links, owner name, group name, number of bytes in the file,
 -l total
 -r needs to reverse the other sorting if there are others ie. -tr
 ./ft_ls includes/ft_ls.h, ls'ing a file doesn't work
--LEAKS
+-LEAKS?
 -t doesn't quite organize properly, ./ft_ls -t libft/srcs/
+-R isn't set for multiple directories
