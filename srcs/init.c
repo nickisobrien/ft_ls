@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:13:50 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/27 18:14:44 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/30 15:29:43 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,5 @@ void	handle_args(t_env *env, int argc, char **args)
 		sort_list(env, env->head, &sort_by_alpha);
 	if (env->t_flag)
 		sort_list(env, env->head, &sort_by_time);
-	if (env->r_flag)
-		sort_list(env, env->head, &sort_by_revalpha);//need to switch to reverse
 	print_list(env, env->head);
 }

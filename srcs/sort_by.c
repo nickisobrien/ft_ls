@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:16:43 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/27 18:16:51 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/30 15:03:53 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 int		sort_by_alpha(t_list *a, t_list *b)
 {
 	return ((ft_strcmp(a->content, b->content)) > 0);
-}
-
-int		sort_by_revalpha(t_list *a, t_list *b)
-{
-	return (!((ft_strcmp(a->content, b->content)) > 0));
 }
 
 int		sort_by_time(t_list *a, t_list *b)

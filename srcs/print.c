@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/27 18:16:32 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/30 15:24:24 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	print_list(t_env *env, t_list *base)
 	iter = base;
 	if (env->arg_count > 1 || (env->R_flag && env->head != base))
 			ft_printf("%s:\n", iter->directory);
+	if (env->l_flag)
+		ft_printf("total %d\n", 0);
 	while (iter->next)
 	{
 		if (env->l_flag)
@@ -57,8 +59,7 @@ void	print_list(t_env *env, t_list *base)
 			ft_printf("\n");
 		iter = iter->next;
 	}
-	if (env->R_flag || env->arg_count > 1)
-		ft_printf("\n");
+	ft_printf("\n");
 	iter = base;
 	while (iter->next)
 	{

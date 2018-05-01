@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:57 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/27 18:16:52 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/30 15:23:34 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 {
 	t_list		*iter;
 	int			unsorted;
+	int			equals;
 
+	equals = env->r_flag ? 0 : 1; 
 	unsorted = 1;
 	while (unsorted)
 	{
@@ -54,7 +56,7 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 		iter = base;
 		while (iter->next && iter->next->next)
 		{
-			if ((*cmp)(iter, iter->next) == 1)
+			if ((*cmp)(iter, iter->next) == equals)
 			{
 				unsorted = 1;
 				list_swap(iter, iter->next);
