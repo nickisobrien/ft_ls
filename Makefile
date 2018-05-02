@@ -6,7 +6,7 @@
 #    By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/18 19:25:11 by jbrown            #+#    #+#              #
-#    Updated: 2018/05/01 17:26:18 by nobrien          ###   ########.fr        #
+#    Updated: 2018/05/01 19:01:43 by nobrien          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ FLAGS = -Wall -Wextra -Werror
 
 
 # lem_in
-FILES = main directories error init lists print sort_by handlers
+FILES = main directories error init lists print sort_by handlers helpers
 INCLUDE = -I ./includes/
 SRC_DIR := ./srcs/
 OBJ_DIR := ./objs/

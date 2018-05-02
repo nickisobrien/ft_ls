@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:16:43 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 17:56:26 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 20:10:05 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,26 @@ int		sort_by_time(t_list *a, t_list *b)
 	if ((abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
 			abuf.st_mtimespec.tv_nsec == bbuf.st_mtimespec.tv_nsec))
 		return (sort_by_alpha(a, b));
+	return (abuf.st_mtimespec.tv_sec < bbuf.st_mtimespec.tv_sec ||
+		(abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
+			abuf.st_mtimespec.tv_nsec < bbuf.st_mtimespec.tv_nsec));
+}
+
+int		str_sort_by_alpha(char *a, char *b)
+{
+	return ((ft_strcmp(a, b)) > 0);
+}
+
+int		str_sort_by_time(char *a, char *b)
+{
+	struct stat		abuf;
+	struct stat		bbuf;
+
+	stat(a, &abuf);
+	stat(b, &bbuf);
+	if ((abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
+			abuf.st_mtimespec.tv_nsec == bbuf.st_mtimespec.tv_nsec))
+		return (str_sort_by_alpha(a, b));
 	return (abuf.st_mtimespec.tv_sec < bbuf.st_mtimespec.tv_sec ||
 		(abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
 			abuf.st_mtimespec.tv_nsec < bbuf.st_mtimespec.tv_nsec));

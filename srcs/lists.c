@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:57 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 18:41:14 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 20:04:00 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,21 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 }
 
 
-void	array_swap(t_list **head, int i)
+void	array_list_swap(t_env *env, int i)
 {
 	t_list *tmp;
 	
-	tmp = head[i - 1];
-	head[i - 1] = head[i];
-	head[i] = tmp;
+	tmp = env->head[i - 1];
+	env->head[i - 1] = env->head[i];
+	env->head[i] = tmp;
 }
 
-void	sort_array(t_env *env, int (*cmp)(t_list *, t_list *))
+void	sort_list_array(t_env *env, int (*cmp)(t_list *, t_list *))
 {
 	int			i;
 	int			unsorted;
 	int			equals;
 
-	i = 1;
 	equals = env->r_flag ? 0 : 1; 
 	unsorted = 1;
 	while (unsorted)
@@ -103,7 +102,39 @@ void	sort_array(t_env *env, int (*cmp)(t_list *, t_list *))
 			if ((*cmp)(env->head[i - 1], env->head[i]) == equals)
 			{
 				unsorted = 1;
-				array_swap(env->head, i);
+				array_list_swap(env, i);
+			}
+		}
+	}
+}
+
+void	array_str_swap(t_env *env, int i)
+{
+	char *tmp;
+	
+	tmp = env->files[i - 1];
+	env->files[i - 1] = env->files[i];
+	env->files[i] = tmp;
+}
+
+void	sort_str_array(t_env *env, int (*cmp)(char *, char *))
+{
+	int			i;
+	int			unsorted;
+	int			equals;
+
+	equals = env->r_flag ? 0 : 1; 
+	unsorted = 1;
+	while (unsorted)
+	{
+		unsorted = 0;
+		i = 0;
+		while (++i < env->has_file)
+		{
+			if ((*cmp)(env->files[i - 1], env->files[i]) == equals)
+			{
+				unsorted = 1;
+				array_str_swap(env, i);
 			}
 		}
 	}

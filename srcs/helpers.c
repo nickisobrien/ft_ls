@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 20:07:52 by nobrien          ###   ########.fr       */
+/*   Created: 2018/05/01 19:01:21 by nobrien           #+#    #+#             */
+/*   Updated: 2018/05/01 19:11:00 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-int		main(int argc, char **argv)
+int		is_file(char *str)
 {
-	t_env env;
+	struct stat buf;
 
-	init_env(&env);
-	handle_flags(&env, argc, argv);
-	handle_args(&env, argc, argv);
-	ft_printf("\n");
-	sleep(10);
-	return (0);
+	stat(str, &buf);
+	return (S_ISREG(buf.st_mode));
 }

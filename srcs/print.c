@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 18:25:31 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 20:05:24 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	print_permissions(struct stat abuf)
     ft_printf( (abuf.st_mode & S_IXOTH) ? "x" : "-");
 }
 
-void	print_l_info(t_list *item)
+void	print_l_info(char *str)
 {
 	struct stat		abuf;
 	char			*t;
 
-	stat(join_paths(item->directory, item->content), &abuf);
+	stat(str, &abuf);
 	print_permissions(abuf);
 	ft_printf(" %2d", abuf.st_nlink);
 	ft_printf(" %s ", getpwuid(abuf.st_uid)->pw_name);
@@ -70,7 +70,7 @@ void	print_list(t_env *env, t_list *base)
 	while (iter->next)
 	{
 		if (env->l_flag)
-			print_l_info(iter);
+			print_l_info(join_paths(iter->directory, iter->content));
 		ft_printf("%-10s ", iter->content);
 		if (env->l_flag && iter->next->next)
 			ft_printf("\n");
@@ -85,5 +85,20 @@ void	print_list(t_env *env, t_list *base)
 			print_list(env, iter->down);
 		}
 		iter = iter->next;
+	}
+}
+
+void	print_file(t_env *env)
+{
+	int i;
+
+	i = -1;
+	while (++i < env->has_file)
+	{
+		if (env->l_flag && i)
+			ft_printf("\n");
+		if (env->l_flag)
+			print_l_info(env->files[i]);
+		ft_printf("%-10s ", env->files[i]);
 	}
 }

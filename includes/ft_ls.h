@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 17:37:00 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 20:05:08 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,13 @@ typedef struct 	s_env
 	int		flag_count;
 	int		arg_count;
 	int		index;
+	int		has_file;
+	char	**files;
 	t_list	**head;
 }				t_env;
+
+//helpers.c
+int		is_file(char *str);
 
 //directories.c
 void	recurse_folders(t_env *env, t_list *head);
@@ -59,18 +64,22 @@ void	handle_args(t_env *env, int argc, char **args);
 
 //print.c
 void	print_permissions(struct stat abuf);
-void	print_l_info(t_list *item);
+void	print_l_info(char *str);
 void	print_list(t_env *env, t_list *base);
+void	print_file(t_env *env);
 
 //lists.c
 t_list	*new_list_item(void);
 void	list_swap(t_list *a, t_list *b);
 void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *));
-void	sort_array(t_env *env, int (*cmp)(t_list *, t_list *));
+void	sort_list_array(t_env *env, int (*cmp)(t_list *, t_list *));
+void	sort_str_array(t_env *env, int (*cmp)(char *, char *));
 
 
 //sort_by.c
 int		sort_by_alpha(t_list *a, t_list *b);
 int		sort_by_time(t_list *a, t_list *b);
+int		str_sort_by_alpha(char *a, char *b);
+int		str_sort_by_time(char *a, char *b);
 
 #endif
