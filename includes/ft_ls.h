@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 15:17:20 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 17:37:00 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ typedef struct 	s_env
 	int		r_flag;
 	int		flag_count;
 	int		arg_count;
-	t_list	*head;
+	int		index;
+	t_list	**head;
 }				t_env;
 
 //directories.c
@@ -50,6 +51,9 @@ char	*join_paths(char *path_a, char *path_b);
 
 //init.c
 void	init_env(t_env *env);
+void	malloc_llarr(t_env *env);
+
+//handlers.c
 void	handle_flags(t_env *env, int argc, char **argv);
 void	handle_args(t_env *env, int argc, char **args);
 
@@ -62,6 +66,8 @@ void	print_list(t_env *env, t_list *base);
 t_list	*new_list_item(void);
 void	list_swap(t_list *a, t_list *b);
 void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *));
+void	sort_array(t_env *env, int (*cmp)(t_list *, t_list *));
+
 
 //sort_by.c
 int		sort_by_alpha(t_list *a, t_list *b);

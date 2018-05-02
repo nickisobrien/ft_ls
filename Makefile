@@ -6,7 +6,7 @@
 #    By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/18 19:25:11 by jbrown            #+#    #+#              #
-#    Updated: 2018/04/27 18:17:39 by nobrien          ###   ########.fr        #
+#    Updated: 2018/05/01 17:26:18 by nobrien          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ FLAGS = -Wall -Wextra -Werror
 
 
 # lem_in
-FILES = main directories error init lists print sort_by
+FILES = main directories error init lists print sort_by handlers
 INCLUDE = -I ./includes/
 SRC_DIR := ./srcs/
 OBJ_DIR := ./objs/
@@ -42,7 +42,7 @@ $(OBJ_DIR):
 	@echo [INFO] Lem-in Object Files Directory Created
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	gcc $(FLAGS) $(INCLUDE) $(LFT_INC) -o $@ -c $<
+	gcc $(FLAGS) $(INCLUDE) $(LFT_INC) -o $@ -c $< 
 
 $(NAME): $(OBJ_DIR) $(OFILES)
 	@gcc $(FLAGS) $(OFILES) $(LFT_LINK) -o $(NAME)

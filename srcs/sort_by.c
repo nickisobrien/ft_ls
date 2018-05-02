@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:16:43 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 15:03:53 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 17:56:26 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int		sort_by_time(t_list *a, t_list *b)
 
 	stat(join_paths(a->directory, a->content), &abuf);
 	stat(join_paths(b->directory, b->content), &bbuf);
-	// if ((abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
-	// 		abuf.st_mtimespec.tv_nsec == bbuf.st_mtimespec.tv_nsec))
-	// 	return (2); // need to figure out this case
+	if ((abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
+			abuf.st_mtimespec.tv_nsec == bbuf.st_mtimespec.tv_nsec))
+		return (sort_by_alpha(a, b));
 	return (abuf.st_mtimespec.tv_sec < bbuf.st_mtimespec.tv_sec ||
 		(abuf.st_mtimespec.tv_sec == bbuf.st_mtimespec.tv_sec &&
 			abuf.st_mtimespec.tv_nsec < bbuf.st_mtimespec.tv_nsec));

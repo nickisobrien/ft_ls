@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:57 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 15:23:34 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 18:41:14 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_list		*new_list_item(void)
 	return (tmp);
 }
 
-void	list_swap(t_list *a, t_list *b)//change where next is pointing instead of swapping content
+void	list_swap(t_list *a, t_list *b)//speed option increase
 {
 	t_list	tmp;
 	
@@ -68,7 +68,44 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 	while (iter->next)
 	{
 		if (iter->down)
+		{
 			sort_list(env, iter->down, cmp);
+		}
 		iter = iter->next;
 	}
 }
+
+
+void	array_swap(t_list **head, int i)
+{
+	t_list *tmp;
+	
+	tmp = head[i - 1];
+	head[i - 1] = head[i];
+	head[i] = tmp;
+}
+
+void	sort_array(t_env *env, int (*cmp)(t_list *, t_list *))
+{
+	int			i;
+	int			unsorted;
+	int			equals;
+
+	i = 1;
+	equals = env->r_flag ? 0 : 1; 
+	unsorted = 1;
+	while (unsorted)
+	{
+		unsorted = 0;
+		i = 0;
+		while (++i < env->index)
+		{
+			if ((*cmp)(env->head[i - 1], env->head[i]) == equals)
+			{
+				unsorted = 1;
+				array_swap(env->head, i);
+			}
+		}
+	}
+}
+

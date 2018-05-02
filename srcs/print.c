@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 15:24:24 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 18:25:31 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,32 +41,47 @@ void	print_l_info(t_list *item)
 	ft_printf(" %.12s ", t);
 }
 
+int		get_total(t_list *base)
+{
+	t_list			*iter;
+	int				total;
+	struct stat		buf;
+
+	iter = base;
+	total = 0;
+	while (iter->next)
+	{
+		stat(join_paths(iter->directory, iter->content), &buf);
+		total += buf.st_blocks;
+		iter = iter->next;
+	}
+	return (total);
+}
+
 void	print_list(t_env *env, t_list *base)
 {
 	t_list *iter;
 
 	iter = base;
-	if (env->arg_count > 1 || (env->R_flag && env->head != base))
+	if (env->arg_count > 1 || (env->R_flag && env->head[env->index] != base))
 			ft_printf("%s:\n", iter->directory);
 	if (env->l_flag)
-		ft_printf("total %d\n", 0);
+		ft_printf("total %d\n", get_total(base));
 	while (iter->next)
 	{
 		if (env->l_flag)
 			print_l_info(iter);
 		ft_printf("%-10s ", iter->content);
-		if (env->l_flag && iter->next)
+		if (env->l_flag && iter->next->next)
 			ft_printf("\n");
 		iter = iter->next;
 	}
-	ft_printf("\n");
 	iter = base;
 	while (iter->next)
 	{
 		if (iter->down)
 		{
-			if (!env->l_flag)
-				ft_printf("\n");
+			ft_printf("\n\n");
 			print_list(env, iter->down);
 		}
 		iter = iter->next;

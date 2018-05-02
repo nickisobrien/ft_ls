@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:13:50 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 15:29:43 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/01 17:53:13 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,60 +20,17 @@ void	init_env(t_env *env)
 	env->t_flag = 0;
 	env->r_flag = 0;
 	env->flag_count = 0;
-	env->head = ft_lstnew(NULL, 0);
-	env->head->next = NULL;
+	env->index = 0;
 }
 
-void	handle_flags(t_env *env, int argc, char **argv)
+void	malloc_llarr(t_env *env)
 {
-	int i;
-
-	if (argc == 1)
-		return ;
-	while (1 + env->flag_count < argc)
+	if (env->arg_count)
 	{
-		i = 0;
-		if (argv[1 + env->flag_count][i++] == '-')
-		{
-			while (argv[1 + env->flag_count][i])
-			{
-				if (argv[1 + env->flag_count][i] == 'l')
-					env->l_flag = 1;
-				else if (argv[1 + env->flag_count][i] == 'r')
-					env->r_flag = 1;
-				else if (argv[1 + env->flag_count][i] == 't')
-					env->t_flag = 1;
-				else if (argv[1 + env->flag_count][i] == 'a')
-					env->a_flag = 1;
-				else if (argv[1 + env->flag_count][i] == 'R')
-					env->R_flag = 1;
-				else
-					usage();
-				i++;
-			}
-		}
-		else
-			break ;
-		env->flag_count++;
+		if (!(env->head = (malloc(sizeof(t_list *) * env->arg_count))))
+			error("Malloc error");
 	}
-}
-
-void	handle_args(t_env *env, int argc, char **args)
-{
-	int i;
-
-	i = -1;
-	env->arg_count = argc - 1 - env->flag_count;
-	if (!env->arg_count)
-		add_directory_to_list(env, ".", env->head);
-	else if (env->arg_count >= 1)
-		while (++i < env->arg_count)
-			add_directory_to_list(env, args[i + 1 + env->flag_count], env->head);
-	if (env->R_flag)
-		recurse_folders(env, env->head);
-	if (!env->t_flag)
-		sort_list(env, env->head, &sort_by_alpha);
-	if (env->t_flag)
-		sort_list(env, env->head, &sort_by_time);
-	print_list(env, env->head);
+	else
+		if (!(env->head = (malloc(sizeof(t_list *) * 1))))
+			error("Malloc error");
 }
