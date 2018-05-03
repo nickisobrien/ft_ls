@@ -63,7 +63,7 @@ void	print_list(t_env *env, t_list *base)
 	t_list *iter;
 
 	iter = base;
-	if (env->arg_count > 1 || (env->R_flag && env->head[env->index] != base))
+	if (env->arg_count > 1 || (env->R_flag && env->head[0] != base))
 			ft_printf("%s:\n", iter->directory);
 	if (env->l_flag)
 		ft_printf("total %d\n", get_total(base));
