@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:13:50 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 19:42:09 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/02 19:45:16 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,8 @@ void	malloc_llarr(t_env *env)
 		if (!(env->head = (malloc(sizeof(t_list *) * env->arg_count))))
 			error("Malloc error");
 	}
-	else
-		if (!(env->head = (malloc(sizeof(t_list *) * 1))))
-			error("Malloc error");
+	else if (!(env->head = (malloc(sizeof(t_list *) * 1))))
+		error("Malloc error");
 	if (!(env->files = malloc(sizeof(char *) * env->arg_count)))
 		error("Malloc error");
 }

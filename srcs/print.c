@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 20:05:24 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/02 19:41:40 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	print_permissions(struct stat abuf)
 {
-	ft_printf( (S_ISDIR(abuf.st_mode)) ? "d" : "-");
-    ft_printf( (abuf.st_mode & S_IRUSR) ? "r" : "-");
-    ft_printf( (abuf.st_mode & S_IWUSR) ? "w" : "-");
-    ft_printf( (abuf.st_mode & S_IXUSR) ? "x" : "-");
-    ft_printf( (abuf.st_mode & S_IRGRP) ? "r" : "-");
-    ft_printf( (abuf.st_mode & S_IWGRP) ? "w" : "-");
-    ft_printf( (abuf.st_mode & S_IXGRP) ? "x" : "-");
-    ft_printf( (abuf.st_mode & S_IROTH) ? "r" : "-");
-    ft_printf( (abuf.st_mode & S_IWOTH) ? "w" : "-");
-    ft_printf( (abuf.st_mode & S_IXOTH) ? "x" : "-");
+	ft_printf((S_ISDIR(abuf.st_mode)) ? "d" : "-");
+	ft_printf((abuf.st_mode & S_IRUSR) ? "r" : "-");
+	ft_printf((abuf.st_mode & S_IWUSR) ? "w" : "-");
+	ft_printf((abuf.st_mode & S_IXUSR) ? "x" : "-");
+	ft_printf((abuf.st_mode & S_IRGRP) ? "r" : "-");
+	ft_printf((abuf.st_mode & S_IWGRP) ? "w" : "-");
+	ft_printf((abuf.st_mode & S_IXGRP) ? "x" : "-");
+	ft_printf((abuf.st_mode & S_IROTH) ? "r" : "-");
+	ft_printf((abuf.st_mode & S_IWOTH) ? "w" : "-");
+	ft_printf((abuf.st_mode & S_IXOTH) ? "x" : "-");
 }
 
 void	print_l_info(char *str)
@@ -64,7 +64,7 @@ void	print_list(t_env *env, t_list *base)
 
 	iter = base;
 	if (env->arg_count > 1 || (env->R_flag && env->head[0] != base))
-			ft_printf("%s:\n", iter->directory);
+		ft_printf("%s:\n", iter->directory);
 	if (env->l_flag)
 		ft_printf("total %d\n", get_total(base));
 	while (iter->next)

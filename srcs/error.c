@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:11:49 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/30 23:55:35 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/02 19:34:46 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char	*join_paths(char *path_a, char *path_b)
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, "/");
 	// ft_strdel(&tmp); leaks?
-
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, path_b);
 	ft_strdel(&tmp);

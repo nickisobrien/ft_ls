@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 20:05:08 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/02 19:37:19 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ typedef struct 	s_env
 
 //helpers.c
 int		is_file(char *str);
+void	array_list_swap(t_env *env, int i);
+void	array_str_swap(t_env *env, int i);
+t_list	*new_list_item(void);
 
 //directories.c
 void	recurse_folders(t_env *env, t_list *head);
@@ -69,7 +72,6 @@ void	print_list(t_env *env, t_list *base);
 void	print_file(t_env *env);
 
 //lists.c
-t_list	*new_list_item(void);
 void	list_swap(t_list *a, t_list *b);
 void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *));
 void	sort_list_array(t_env *env, int (*cmp)(t_list *, t_list *));

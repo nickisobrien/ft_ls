@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:13:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/01 17:54:02 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/02 19:34:34 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	add_directory_to_list(t_env *env, char *directory, t_list *base)
 
 void	recurse_folders(t_env *env, t_list *head)
 {
-	t_list *iter;
-	struct stat buf;
+	t_list		*iter;
+	struct stat	buf;
 
 	iter = head;
 	while (iter->next)
