@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/02 19:41:40 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/03 17:15:53 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,20 @@ void	print_permissions(struct stat abuf)
 
 void	print_l_info(char *str)
 {
-	struct stat		abuf;
+	struct stat		buf;
 	char			*t;
 
-	stat(str, &abuf);
-	print_permissions(abuf);
-	ft_printf(" %2d", abuf.st_nlink);
-	ft_printf(" %s ", getpwuid(abuf.st_uid)->pw_name);
-	ft_printf(" %s ", getgrgid(abuf.st_gid)->gr_name);
-	ft_printf(" %5d", abuf.st_size);
-	t = ctime(&(abuf.st_mtime)) + 4;
+	t = ft_strnew(12);
+	stat(str, &buf);
+	print_permissions(buf);
+	ft_printf(" %2d", buf.st_nlink);
+	ft_printf(" %s ", getpwuid(buf.st_uid)->pw_name);
+	ft_printf(" %s ", getgrgid(buf.st_gid)->gr_name);
+	ft_printf(" %5d", buf.st_size);
+	ft_strncpy(t, ctime(&(buf.st_mtime)) + 4, 12);
 	ft_printf(" %.12s ", t);
+	ft_strdel(&t);
+	ft_strdel(&str);
 }
 
 int		get_total(t_list *base)
@@ -46,12 +49,15 @@ int		get_total(t_list *base)
 	t_list			*iter;
 	int				total;
 	struct stat		buf;
+	char			*str;
 
 	iter = base;
 	total = 0;
 	while (iter->next)
 	{
-		stat(join_paths(iter->directory, iter->content), &buf);
+		str = join_paths(iter->directory, iter->content);
+		stat(str, &buf);
+		ft_strdel(&str);
 		total += buf.st_blocks;
 		iter = iter->next;
 	}
@@ -60,7 +66,7 @@ int		get_total(t_list *base)
 
 void	print_list(t_env *env, t_list *base)
 {
-	t_list *iter;
+	t_list	*iter;
 
 	iter = base;
 	if (env->arg_count > 1 || (env->R_flag && env->head[0] != base))

@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:13:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/02 19:34:34 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/03 17:21:49 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,19 @@ void	recurse_folders(t_env *env, t_list *head)
 {
 	t_list		*iter;
 	struct stat	buf;
+	char		*str;
 
 	iter = head;
 	while (iter->next)
 	{
-		stat(join_paths(iter->directory, iter->content), &buf);
+		str = join_paths(iter->directory, iter->content);
+		stat(str, &buf);
 		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
 		{
-			add_directory_to_list(env, join_paths(iter->directory, iter->content), iter);
+			add_directory_to_list(env, str, iter);
 			recurse_folders(env, iter->down);
 		}
+		ft_strdel(&str);
 		iter = iter->next;
 	}
 }

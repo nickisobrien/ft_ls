@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/01 17:26:00 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/02 19:38:36 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/03 17:28:28 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	handle_flags(t_env *env, int argc, char **argv)
 }
 
 void	call(t_env *env, int i)
-{
+{	
 	if (env->R_flag)
 		recurse_folders(env, env->head[i]);
 	if (!env->t_flag)
