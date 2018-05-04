@@ -36,7 +36,7 @@ void			handle_flags(t_env *env, int argc, char **argv)
 				else if (argv[1 + env->flag_count][i] == 'a')
 					env->a_flag = 1;
 				else if (argv[1 + env->flag_count][i] == 'R')
-					env->R_flag = 1;
+					env->ur_flag = 1;
 				else
 					usage();
 			}
@@ -48,7 +48,7 @@ void			handle_flags(t_env *env, int argc, char **argv)
 
 static void		call(t_env *env, int i)
 {
-	if (env->R_flag)
+	if (env->ur_flag)
 		recurse_folders(env, env->head[i]);
 	if (!env->t_flag)
 		sort_list(env, env->head[i], &sort_by_alpha);

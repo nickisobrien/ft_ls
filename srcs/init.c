@@ -15,7 +15,7 @@
 void	init_env(t_env *env)
 {
 	env->l_flag = 0;
-	env->R_flag = 0;
+	env->ur_flag = 0;
 	env->a_flag = 0;
 	env->t_flag = 0;
 	env->r_flag = 0;

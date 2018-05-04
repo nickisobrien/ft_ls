@@ -46,7 +46,7 @@ static int		loop(const int fd, char **buf, int *ret, char **line)
 	return (0);
 }
 
-int			ft_get_next_line(const int fd, char **line)
+int				ft_get_next_line(const int fd, char **line)
 {
 	static char	*buf = NULL;
 	int			ret;
