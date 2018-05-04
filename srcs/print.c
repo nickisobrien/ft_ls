@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 18:15:08 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/03 17:15:53 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/03 19:25:33 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	print_file(t_env *env)
 		if (env->l_flag && i)
 			ft_printf("\n");
 		if (env->l_flag)
-			print_l_info(env->files[i]);
+			print_l_info(ft_strdup(env->files[i]));
 		ft_printf("%-10s ", env->files[i]);
 	}
 }

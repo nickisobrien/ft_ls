@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:42:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/03 17:16:03 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/03 19:26:05 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,5 @@ int		main(int argc, char **argv)
 	handle_flags(&env, argc, argv);
 	handle_args(&env, argc, argv);
 	ft_printf("\n");
-	sleep(10);
 	return (0);
 }
