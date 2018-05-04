@@ -12,24 +12,20 @@
 
 #include <ft_ls.h>
 
-void	handle_file(t_env *env, char *str)
+void			handle_file(t_env *env, char *str)
 {
 	env->files[env->has_file] = ft_strdup(str);
 	env->has_file++;
 }
 
-void	handle_flags(t_env *env, int argc, char **argv)
+void			handle_flags(t_env *env, int argc, char **argv)
 {
 	int i;
 
-	if (argc == 1)
-		return ;
-	while (1 + env->flag_count < argc)
+	while (1 + env->flag_count < argc && (i = -1))
 	{
-		i = 0;
-		if (argv[1 + env->flag_count][i++] == '-')
-		{
-			while (argv[1 + env->flag_count][i])
+		if (argv[1 + env->flag_count][++i] == '-')
+			while (argv[1 + env->flag_count][++i])
 			{
 				if (argv[1 + env->flag_count][i] == 'l')
 					env->l_flag = 1;
@@ -43,17 +39,15 @@ void	handle_flags(t_env *env, int argc, char **argv)
 					env->R_flag = 1;
 				else
 					usage();
-				i++;
 			}
-		}
 		else
 			break ;
 		env->flag_count++;
 	}
 }
 
-void	call(t_env *env, int i)
-{	
+static void		call(t_env *env, int i)
+{
 	if (env->R_flag)
 		recurse_folders(env, env->head[i]);
 	if (!env->t_flag)
@@ -65,37 +59,14 @@ void	call(t_env *env, int i)
 	print_list(env, env->head[i]);
 }
 
-void	handle_args(t_env *env, int argc, char **args)
+static void		get_calls(t_env *env)
 {
 	int i;
 
-	i = -1;
-	env->arg_count = argc - 1 - env->flag_count;
-	malloc_llarr(env);
-	if (!env->arg_count)
-	{
-		env->head[env->index] = ft_lstnew(NULL, 0);
-		env->head[env->index]->next = NULL;
-		add_directory_to_list(env, ".", env->head[env->index]);
-		env->index++;
-	}
-	else if (env->arg_count >= 1)
-	{
-		while (++i < env->arg_count)
-		{
-			if (is_file(args[i + 1 + env->flag_count]))
-				handle_file(env, args[i + 1 + env->flag_count]);
-			else
-			{
-				env->head[env->index] = ft_lstnew(NULL, 0);
-				env->head[env->index]->next = NULL;
-				add_directory_to_list(env, args[i + 1 + env->flag_count], env->head[env->index]);
-				env->index++;
-			}
-		}
-	}
-	env->t_flag ? sort_list_array(env, &sort_by_time) : sort_list_array(env, &sort_by_alpha);
-	env->t_flag ? sort_str_array(env, &str_sort_by_time) : sort_str_array(env, &str_sort_by_alpha);
+	env->t_flag ? sort_list_array(env, &sort_by_time)
+	: sort_list_array(env, &sort_by_alpha);
+	env->t_flag ? sort_str_array(env, &str_sort_by_time)
+	: sort_str_array(env, &str_sort_by_alpha);
 	print_file(env);
 	i = -1;
 	while (++i < env->index)
@@ -104,4 +75,33 @@ void	handle_args(t_env *env, int argc, char **args)
 		if (i + 1 < env->index)
 			ft_printf("\n\n");
 	}
+}
+
+void			handle_args(t_env *env, int argc, char **args)
+{
+	int i;
+
+	env->arg_count = argc - 1 - env->flag_count;
+	if (!env->arg_count)
+	{
+		env->head[env->index] = ft_lstnew(NULL, 0);
+		env->head[env->index]->next = NULL;
+		add_directory_to_list(env, ".", env->head[env->index]);
+		env->index++;
+	}
+	else if (env->arg_count >= 1 && (i = -1))
+	{
+		while (++i < env->arg_count)
+			if (is_file(args[i + 1 + env->flag_count]))
+				handle_file(env, args[i + 1 + env->flag_count]);
+			else
+			{
+				env->head[env->index] = ft_lstnew(NULL, 0);
+				env->head[env->index]->next = NULL;
+				add_directory_to_list(env, args[i + 1 + env->flag_count],
+					env->head[env->index]);
+				env->index++;
+			}
+	}
+	get_calls(env);
 }

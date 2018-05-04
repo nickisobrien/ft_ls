@@ -12,7 +12,7 @@
 
 #include <ft_ls.h>
 
-void	print_permissions(struct stat abuf)
+void			print_permissions(struct stat abuf)
 {
 	ft_printf((S_ISDIR(abuf.st_mode)) ? "d" : "-");
 	ft_printf((abuf.st_mode & S_IRUSR) ? "r" : "-");
@@ -26,7 +26,7 @@ void	print_permissions(struct stat abuf)
 	ft_printf((abuf.st_mode & S_IXOTH) ? "x" : "-");
 }
 
-void	print_l_info(char *str)
+static void		print_l_info(char *str)
 {
 	struct stat		buf;
 	char			*t;
@@ -44,27 +44,23 @@ void	print_l_info(char *str)
 	ft_strdel(&str);
 }
 
-int		get_total(t_list *base)
+static void		recurse(t_env *env, t_list *base)
 {
-	t_list			*iter;
-	int				total;
-	struct stat		buf;
-	char			*str;
+	t_list	*iter;
 
 	iter = base;
-	total = 0;
 	while (iter->next)
 	{
-		str = join_paths(iter->directory, iter->content);
-		stat(str, &buf);
-		ft_strdel(&str);
-		total += buf.st_blocks;
+		if (iter->down)
+		{
+			ft_printf("\n\n");
+			print_list(env, iter->down);
+		}
 		iter = iter->next;
 	}
-	return (total);
 }
 
-void	print_list(t_env *env, t_list *base)
+void			print_list(t_env *env, t_list *base)
 {
 	t_list	*iter;
 
@@ -82,19 +78,10 @@ void	print_list(t_env *env, t_list *base)
 			ft_printf("\n");
 		iter = iter->next;
 	}
-	iter = base;
-	while (iter->next)
-	{
-		if (iter->down)
-		{
-			ft_printf("\n\n");
-			print_list(env, iter->down);
-		}
-		iter = iter->next;
-	}
+	recurse(env, base);
 }
 
-void	print_file(t_env *env)
+void			print_file(t_env *env)
 {
 	int i;
 

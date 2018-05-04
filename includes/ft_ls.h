@@ -49,6 +49,7 @@ t_list	*new_list_item(void);
 //directories.c
 void	recurse_folders(t_env *env, t_list *head);
 void	add_directory_to_list(t_env *env, char *directory, t_list *base);
+int		get_total(t_list *base);
 
 //error.c
 void	error(char *err);
@@ -67,7 +68,6 @@ void	handle_args(t_env *env, int argc, char **args);
 
 //print.c
 void	print_permissions(struct stat abuf);
-void	print_l_info(char *str);
 void	print_list(t_env *env, t_list *base);
 void	print_file(t_env *env);
 

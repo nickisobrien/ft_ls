@@ -22,6 +22,7 @@ void	init_env(t_env *env)
 	env->flag_count = 0;
 	env->index = 0;
 	env->has_file = 0;
+	malloc_llarr(env);
 }
 
 void	malloc_llarr(t_env *env)

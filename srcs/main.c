@@ -17,7 +17,8 @@ int		main(int argc, char **argv)
 	t_env env;
 
 	init_env(&env);
-	handle_flags(&env, argc, argv);
+	if (argc > 1)
+		handle_flags(&env, argc, argv);
 	handle_args(&env, argc, argv);
 	ft_printf("\n");
 	return (0);

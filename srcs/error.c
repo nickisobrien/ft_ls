@@ -45,7 +45,6 @@ char	*join_paths(char *path_a, char *path_b)
 
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, "/");
-	// ft_strdel(&tmp); leaks?
 	tmp = path_a;
 	path_a = ft_strjoin(path_a, path_b);
 	ft_strdel(&tmp);

@@ -12,6 +12,26 @@
 
 #include <ft_ls.h>
 
+int		get_total(t_list *base)
+{
+	t_list			*iter;
+	int				total;
+	struct stat		buf;
+	char			*str;
+
+	iter = base;
+	total = 0;
+	while (iter->next)
+	{
+		str = join_paths(iter->directory, iter->content);
+		stat(str, &buf);
+		ft_strdel(&str);
+		total += buf.st_blocks;
+		iter = iter->next;
+	}
+	return (total);
+}
+
 void	add_directory_to_list(t_env *env, char *directory, t_list *base)
 {
 	struct dirent	*sd;
@@ -51,7 +71,8 @@ void	recurse_folders(t_env *env, t_list *head)
 	{
 		str = join_paths(iter->directory, iter->content);
 		stat(str, &buf);
-		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") && !ft_strequ(iter->content, "."))
+		if (S_ISDIR(buf.st_mode) && !ft_strequ(iter->content, "..") &&
+			!ft_strequ(iter->content, "."))
 		{
 			add_directory_to_list(env, str, iter);
 			recurse_folders(env, iter->down);

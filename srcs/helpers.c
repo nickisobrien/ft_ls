@@ -50,7 +50,7 @@ t_list	*new_list_item(void)
 	return (tmp);
 }
 
-void	list_swap(t_list *a, t_list *b)//speed option increase
+void	list_swap(t_list *a, t_list *b)
 {
 	t_list	tmp;
 

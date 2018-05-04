@@ -20,17 +20,13 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 
 	equals = env->r_flag ? 0 : 1;
 	unsorted = 1;
-	while (unsorted)
+	while (unsorted && !(unsorted = 0))
 	{
-		unsorted = 0;
 		iter = base;
 		while (iter->next && iter->next->next)
 		{
-			if ((*cmp)(iter, iter->next) == equals)
-			{
-				unsorted = 1;
+			if (((*cmp)(iter, iter->next) == equals) && (unsorted = 1))
 				list_swap(iter, iter->next);
-			}
 			iter = iter->next;
 		}
 	}
@@ -38,9 +34,7 @@ void	sort_list(t_env *env, t_list *base, int (*cmp)(t_list *, t_list *))
 	while (iter->next)
 	{
 		if (iter->down)
-		{
 			sort_list(env, iter->down, cmp);
-		}
 		iter = iter->next;
 	}
 }
