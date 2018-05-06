@@ -17,7 +17,7 @@ FLAGS = -Wall -Wextra -Werror
 
 
 # lem_in
-FILES = main directories error init lists print sort_by handlers helpers
+FILES = main directories error init lists print sort_by handlers helpers helpers_nwidth
 INCLUDE = -I ./includes/
 SRC_DIR := ./srcs/
 OBJ_DIR := ./objs/
