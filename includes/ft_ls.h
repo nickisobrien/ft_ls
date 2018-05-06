@@ -77,6 +77,6 @@ int				sort_by_time(t_list *a, t_list *b);
 int				str_sort_by_alpha(char *a, char *b);
 int				str_sort_by_time(char *a, char *b);
 
-int     		get_size_len(t_list *base);
+int				get_size_len(t_list *base);
 int				get_size_len_arr(t_env *env);
 #endif
