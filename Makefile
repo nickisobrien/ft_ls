@@ -6,7 +6,7 @@
 #    By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/18 19:25:11 by jbrown            #+#    #+#              #
-#    Updated: 2018/05/01 19:01:43 by nobrien          ###   ########.fr        #
+#    Updated: 2018/05/09 21:37:56 by nobrien          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ RM = /bin/rm -f
 FLAGS = -Wall -Wextra -Werror
 
 
-# lem_in
-FILES = main directories error init lists print sort_by handlers helpers helpers_nwidth
+# ls
+FILES = main directories error init lists print sort_by handlers helpers helpers_nwidth file
 INCLUDE = -I ./includes/
 SRC_DIR := ./srcs/
 OBJ_DIR := ./objs/
@@ -39,23 +39,23 @@ $(LFT_LIB):
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
-	@echo [INFO] Lem-in Object Files Directory Created
+	@echo [INFO] Ft_ls Object Files Directory Created
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	gcc $(FLAGS) $(INCLUDE) $(LFT_INC) -o $@ -c $< 
 
 $(NAME): $(OBJ_DIR) $(OFILES)
 	@gcc $(FLAGS) $(OFILES) $(LFT_LINK) -o $(NAME)
-	@echo [INFO] Lem-in Binary Created
+	@echo [INFO] Ft_ls Binary Created
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@echo [INFO] Lem-in Object Files Directory Destroyed
+	@echo [INFO] Ft_ls Object Files Directory Destroyed
 	@make -C $(LFT_DIR) clean
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo [INFO] Lem-in Binary Destroyed
+	@echo [INFO] Ft_ls Binary Destroyed
 	@make -C $(LFT_DIR) fclean
 
 re: fclean all

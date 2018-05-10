@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/22 10:44:20 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/03 17:13:45 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/09 21:37:43 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ typedef struct	s_env
 }				t_env;
 
 int				is_file(char *str);
+void			handle_file(t_env *env, char *str);
+
+int				is_dir(char *str);
 void			array_list_swap(t_env *env, int i);
 void			array_str_swap(t_env *env, int i);
 t_list			*new_list_item(void);

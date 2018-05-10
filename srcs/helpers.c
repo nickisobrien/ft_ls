@@ -6,18 +6,18 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/01 19:01:21 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/03 17:33:23 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/09 21:37:11 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-int		is_file(char *str)
+int		is_dir(char *str)
 {
 	struct stat buf;
 
 	stat(str, &buf);
-	return (S_ISREG(buf.st_mode));
+	return (S_ISDIR(buf.st_mode));
 }
 
 void	array_list_swap(t_env *env, int i)

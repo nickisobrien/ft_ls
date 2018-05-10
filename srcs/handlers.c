@@ -6,17 +6,11 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/01 17:26:00 by nobrien           #+#    #+#             */
-/*   Updated: 2018/05/03 17:28:28 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/05/09 21:44:15 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
-
-void			handle_file(t_env *env, char *str)
-{
-	env->files[env->has_file] = ft_strdup(str);
-	env->has_file++;
-}
 
 void			handle_flags(t_env *env, int argc, char **argv)
 {
@@ -77,6 +71,14 @@ static void		get_calls(t_env *env)
 	}
 }
 
+static void		invalid_file(t_env *env, char **args, int i)
+{
+	ft_printf("ls: %s: No such file or directory",
+		args[i + 1 + env->flag_count]);
+	if (args[i + 2 + env->flag_count])
+		ft_printf("\n");
+}
+
 void			handle_args(t_env *env, int argc, char **args)
 {
 	int i;
@@ -86,22 +88,22 @@ void			handle_args(t_env *env, int argc, char **args)
 	{
 		env->head[env->index] = ft_lstnew(NULL, 0);
 		env->head[env->index]->next = NULL;
-		add_directory_to_list(env, ".", env->head[env->index]);
-		env->index++;
+		add_directory_to_list(env, ".", env->head[env->index++]);
 	}
 	else if (env->arg_count >= 1 && (i = -1))
 	{
 		while (++i < env->arg_count)
 			if (is_file(args[i + 1 + env->flag_count]))
 				handle_file(env, args[i + 1 + env->flag_count]);
-			else
+			else if (is_dir(args[i + 1 + env->flag_count]))
 			{
 				env->head[env->index] = ft_lstnew(NULL, 0);
 				env->head[env->index]->next = NULL;
 				add_directory_to_list(env, args[i + 1 + env->flag_count],
-					env->head[env->index]);
-				env->index++;
+					env->head[env->index++]);
 			}
+			else
+				invalid_file(env, args, i);
 	}
 	get_calls(env);
 }
